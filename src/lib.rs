@@ -4,7 +4,6 @@ use std::{
 };
 
 pub fn git_root<P: AsRef<std::path::Path>>(path: P) -> Result<Option<PathBuf>, std::io::Error> {
-    //let path: PathBuf = path.as_ref().to_path_buf();
     let handle: ReadDir = std::fs::read_dir(&path)?;
 
     for entry in handle.into_iter() {
@@ -43,13 +42,13 @@ fn is_dir(entry: &DirEntry) -> bool {
 
 fn is_git_dir(entry: &DirEntry) -> Result<bool, std::io::Error> {
     match entry.file_name().to_str() {
-        Some(".git") => has_git_config(dbg!(entry)),
+        Some(".git") => has_git_config(entry),
         _ => Ok(false),
     }
 }
 
 fn has_git_config(entry: &DirEntry) -> Result<bool, std::io::Error> {
-    let handle: ReadDir = std::fs::read_dir(dbg!(entry.path()))?;
+    let handle: ReadDir = std::fs::read_dir(entry.path())?;
     let found: bool =
         handle
             .into_iter()
