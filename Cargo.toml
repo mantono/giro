@@ -2,6 +2,12 @@
 name = "is-git"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+authors = ["Anton Österberg <anton@42x.io>"]
+repository = "https://github.com/mantono/is-git"
+description = "Resolve whether a path belongs to a git repository or not"
+keywords = ["git", "repository"]
+categories = ["filesystem"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
