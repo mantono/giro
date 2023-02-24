@@ -4,6 +4,7 @@ use std::{
 };
 
 pub fn git_root<P: AsRef<std::path::Path>>(path: P) -> Result<Option<PathBuf>, std::io::Error> {
+    let path: PathBuf = path.as_ref().canonicalize()?;
     let handle: ReadDir = std::fs::read_dir(&path)?;
 
     for entry in handle.into_iter() {
@@ -23,11 +24,11 @@ pub fn git_root<P: AsRef<std::path::Path>>(path: P) -> Result<Option<PathBuf>, s
         let has_config: bool = has_git_config(&entry)?;
 
         if has_config {
-            return Ok(Some(path.as_ref().to_path_buf()));
+            return Ok(Some(path));
         }
     }
 
-    match path.as_ref().parent() {
+    match path.parent() {
         Some(parent) => git_root(parent.to_str().unwrap()),
         None => Ok(None),
     }
