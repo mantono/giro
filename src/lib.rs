@@ -4,7 +4,7 @@ use std::{
 };
 
 pub fn git_root<P: AsRef<std::path::Path>>(path: P) -> Result<Option<PathBuf>, std::io::Error> {
-    let path: PathBuf = path.as_ref().canonicalize()?;
+    let path: PathBuf = normalize(path)?;
     let handle: ReadDir = std::fs::read_dir(&path)?;
 
     for entry in handle.into_iter() {
@@ -62,13 +62,31 @@ fn has_git_config(entry: &DirEntry) -> Result<bool, std::io::Error> {
     Ok(found)
 }
 
+fn normalize<P: AsRef<std::path::Path>>(path: P) -> Result<PathBuf, std::io::Error> {
+    let path: PathBuf = path.as_ref().canonicalize()?;
+    if path.is_dir() {
+        Ok(path)
+    } else {
+        match path.parent() {
+            Some(parent) => Ok(parent.to_path_buf()),
+            None => Ok(path),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn test_dev_is_not_git() {
+    fn test_directory_is_not_in_git_repo() {
         let git_root: Option<PathBuf> = git_root("/dev").unwrap();
+        assert_eq!(None, git_root);
+    }
+
+    #[test]
+    fn test_file_is_not_in_git_repo() {
+        let git_root: Option<PathBuf> = git_root("/dev/null").unwrap();
         assert_eq!(None, git_root);
     }
 
