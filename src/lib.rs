@@ -3,6 +3,12 @@ use std::{
     path::PathBuf,
 };
 
+/// Check if a path resides within a git repository, and if so, return the
+/// path to the root of the git repository. If the path does not reside insdie
+/// a git repository, `None` will be returned.
+///
+/// The ".git" directory inside a git repository is also considered to be
+/// inside the git repository.
 pub fn git_root<P: AsRef<std::path::Path>>(path: P) -> Result<Option<PathBuf>, std::io::Error> {
     let path: PathBuf = normalize(path)?;
     let handle: ReadDir = std::fs::read_dir(&path)?;
