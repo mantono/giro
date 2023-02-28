@@ -14,22 +14,8 @@ pub fn git_root<P: AsRef<std::path::Path>>(path: P) -> Result<Option<PathBuf>, s
     let handle: ReadDir = std::fs::read_dir(&path)?;
 
     for entry in handle.into_iter() {
-        let entry: DirEntry = match entry {
-            Ok(entry) => entry,
-            Err(e) => return Err(e),
-        };
-
-        if !is_dir(&entry) {
-            continue;
-        }
-
-        if !is_git_dir(&entry)? {
-            continue;
-        }
-
-        let has_config: bool = has_git_config(&entry)?;
-
-        if has_config {
+        let entry: DirEntry = entry?;
+        if accept(entry)? {
             return Ok(Some(path));
         }
     }
@@ -37,6 +23,18 @@ pub fn git_root<P: AsRef<std::path::Path>>(path: P) -> Result<Option<PathBuf>, s
     match path.parent() {
         Some(parent) => git_root(parent.to_str().unwrap()),
         None => Ok(None),
+    }
+}
+
+fn accept(entry: DirEntry) -> Result<bool, std::io::Error> {
+    if !is_dir(&entry) {
+        Ok(false)
+    } else if !is_git_dir(&entry)? {
+        Ok(false)
+    } else if !has_git_config(&entry)? {
+        Ok(false)
+    } else {
+        Ok(true)
     }
 }
 
