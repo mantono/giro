@@ -1,4 +1,4 @@
-use is_git::git_root;
+use git_root::git_root;
 
 fn main() {
     let mut args = std::env::args();
