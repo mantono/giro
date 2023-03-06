@@ -27,14 +27,10 @@ pub fn git_root<P: AsRef<std::path::Path>>(path: P) -> Result<Option<PathBuf>, s
 }
 
 fn accept(entry: DirEntry) -> Result<bool, std::io::Error> {
-    if !is_dir(&entry) {
-        Ok(false)
-    } else if !is_git_dir(&entry)? {
-        Ok(false)
-    } else if !has_git_config(&entry)? {
-        Ok(false)
-    } else {
+    if is_dir(&entry) && is_git_dir(&entry)? {
         Ok(true)
+    } else {
+        Ok(false)
     }
 }
 
