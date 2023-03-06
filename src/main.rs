@@ -1,4 +1,4 @@
-use git_root::git_root;
+use giro::git_root;
 
 fn main() {
     let mut args = std::env::args();
