@@ -13,7 +13,7 @@ pub fn git_root<P: AsRef<std::path::Path>>(path: P) -> Result<Option<PathBuf>, s
     let path: PathBuf = normalize(path)?;
     let handle: ReadDir = std::fs::read_dir(&path)?;
 
-    for entry in handle.into_iter() {
+    for entry in handle {
         let entry: DirEntry = entry?;
         if accept(entry)? {
             return Ok(Some(path));
