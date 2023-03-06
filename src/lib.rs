@@ -50,11 +50,10 @@ fn is_git_dir(entry: &DirEntry) -> Result<bool, std::io::Error> {
 
 fn has_git_config(entry: &DirEntry) -> Result<bool, std::io::Error> {
     let handle: ReadDir = std::fs::read_dir(entry.path())?;
-    let found: bool =
-        handle.into_iter().filter_map(|e| e.ok()).any(|e| match e.file_name().to_str() {
-            Some("config") => true,
-            _ => false,
-        });
+    let found: bool = handle
+        .into_iter()
+        .filter_map(|e| e.ok())
+        .any(|e| matches!(e.file_name().to_str(), Some("config")));
 
     Ok(found)
 }
