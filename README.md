@@ -1,5 +1,5 @@
 # giro
-giro is a crate to for resolving the Git repository root directory, if any, of a path. So essentially,
+giro (from **gi**t-**ro**ot) is a [crate](https://crates.io/crates/giro) to for resolving the Git repository root directory, if any, of a path. So essentially,
 it enables you to find out two things:
 - Does a path belong to a Git repository?
 - If so, what is the root directory of this Git repository?
@@ -16,6 +16,7 @@ functionality.
 
 ## Usage
 ### Library (crate)
+Run
 ```sh
 cargo add giro
 ```
