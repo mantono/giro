@@ -31,7 +31,7 @@ to your projects Cargo.toml.
 
 Then call it with
 ```rust
-let root: Option<std::io::PathBuf> = giro::git_root("some/path")?;
+let root: Option<std::path::PathBuf> = giro::git_root("some/path")?;
 ```
 
 ### Application (binary)
