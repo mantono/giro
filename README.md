@@ -1,4 +1,4 @@
-# git-root
+# giro
 This is a crate to for resolving the Git repository root directory, if any, of a path. So essentially,
 it enables you to find out two things:
 - Does the path X belong to a Git repository?
