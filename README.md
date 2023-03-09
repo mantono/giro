@@ -48,3 +48,7 @@ git root
 ```
 
 to check if the current directory is inside a git repository or not.
+
+#### Man Pages
+If you want man pages for the git-root binary, it can be added by copying the file `git-root.1.man`
+to a directory in your [`$MANPATH`](https://www.howtoforge.com/linux-manpath-command).

@@ -10,12 +10,7 @@ fn main() {
 }
 
 fn help() {
-    eprintln!("git-root");
-    eprintln!("Anton Österberg <anton42x.io>\n");
-    eprintln!("USAGE:\n\tgit root <path>\n");
-    eprintln!("FLAGS:");
-    eprintln!("\t-h            print this help text");
-    eprintln!("\t--help        print man pages (if installed)")
+    eprintln!(include_str!("../help"))
 }
 
 fn resolve(path: &str) {
