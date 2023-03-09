@@ -1,0 +1,34 @@
+.TH GIT-ROOT 1
+
+.SH NAME
+git-root \- Resolve git root
+
+.SH DESCRIPTION
+Resolve whether a path is part of a git repository, and find the root directory of the given path if it does belong to a git repository.
+
+.SH SYNOPSIS
+
+\fIgit root \fR<path>
+
+.SH OPTIONS
+-h
+.RS
+print help text
+
+.RE
+--help
+.RS
+show man pages
+
+.SH EXIT CODES
+.I 0
+- The given path belonged to a git repository, and the root of this repository could be resolved
+
+.I 1
+- The given path did not belong to a git repository
+
+.I 2
+- An I/O error occured while trying to resolve if the path belonged to a git repository or not
+
+.SH SOURCE CODE
+Source coude can be found at GitHub <https://github.com/mantono/giro>
