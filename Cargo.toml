@@ -9,11 +9,19 @@ description = "Resolve whether a path belongs to a git repository or not"
 readme = "README.md"
 keywords = ["git", "repository"]
 categories = ["filesystem"]
+build = "build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[bin]]
 name = "git-root"
 path = "src/main.rs"
+
+[features]
+default = ["man"]
+man = ["dep:bzip2"]
+
+[build-dependencies]
+bzip2 = { version = "0.4.4", optional = true }
 
 [dependencies]
