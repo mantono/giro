@@ -1,0 +1,28 @@
+name: Build & Test
+on:
+  push:
+    paths:
+      - "Cargo.toml"
+      - "src/**"
+      - "tests/**"
+      - "examples/**"
+      - ".github/workflows/rust.yml"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build
+        run: cargo build --all-features
+      - name: Run tests
+        run: cargo test --workspace
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run: rustup component add clippy
+      - uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
