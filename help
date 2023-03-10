@@ -1,5 +1,5 @@
 git-root
-Anton Österberg <anton42x.io>
+Anton Österberg <anton@42x.io>
 Resolve whether a path is part of a git repository, and find the root directory of the given path
 if it does belong to a git repository.
 
