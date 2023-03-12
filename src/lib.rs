@@ -1,6 +1,6 @@
 use std::{
-    fs::{DirEntry, ReadDir},
-    path::PathBuf,
+    io::Error,
+    path::{Path, PathBuf},
 };
 
 /// Check if a path resides within a git repository, and if so, return the
@@ -9,56 +9,12 @@ use std::{
 ///
 /// The ".git" directory inside a git repository is also considered to be
 /// inside the git repository.
-pub fn git_root<P: AsRef<std::path::Path>>(path: P) -> Result<Option<PathBuf>, std::io::Error> {
+pub fn git_root<P: AsRef<Path>>(path: P) -> Result<Option<PathBuf>, Error> {
     let path: PathBuf = normalize(path)?;
-    let handle: ReadDir = std::fs::read_dir(&path)?;
-
-    for entry in handle {
-        let entry: DirEntry = entry?;
-        if accept(entry)? {
-            return Ok(Some(path));
-        }
-    }
-
-    match path.parent() {
-        Some(parent) => git_root(parent.to_str().unwrap()),
-        None => Ok(None),
-    }
+    Ok(traverse(&path))
 }
 
-fn accept(entry: DirEntry) -> Result<bool, std::io::Error> {
-    if is_dir(&entry) && is_git_dir(&entry)? {
-        Ok(true)
-    } else {
-        Ok(false)
-    }
-}
-
-fn is_dir(entry: &DirEntry) -> bool {
-    match entry.metadata() {
-        Ok(md) => md.is_dir(),
-        Err(_) => false,
-    }
-}
-
-fn is_git_dir(entry: &DirEntry) -> Result<bool, std::io::Error> {
-    match entry.file_name().to_str() {
-        Some(".git") => has_git_config(entry),
-        _ => Ok(false),
-    }
-}
-
-fn has_git_config(entry: &DirEntry) -> Result<bool, std::io::Error> {
-    let handle: ReadDir = std::fs::read_dir(entry.path())?;
-    let found: bool = handle
-        .into_iter()
-        .filter_map(|e| e.ok())
-        .any(|e| matches!(e.file_name().to_str(), Some("config")));
-
-    Ok(found)
-}
-
-fn normalize<P: AsRef<std::path::Path>>(path: P) -> Result<PathBuf, std::io::Error> {
+fn normalize<P: AsRef<Path>>(path: P) -> Result<PathBuf, Error> {
     let path: PathBuf = path.as_ref().canonicalize()?;
     if path.is_dir() {
         Ok(path)
@@ -66,6 +22,18 @@ fn normalize<P: AsRef<std::path::Path>>(path: P) -> Result<PathBuf, std::io::Err
         match path.parent() {
             Some(parent) => Ok(parent.to_path_buf()),
             None => Ok(path),
+        }
+    }
+}
+
+fn traverse(path: &Path) -> Option<PathBuf> {
+    let git_config: PathBuf = path.join(".git").join("config");
+    if git_config.exists() {
+        Some(path.to_path_buf())
+    } else {
+        match path.parent() {
+            Some(parent) => traverse(parent),
+            None => None,
         }
     }
 }
