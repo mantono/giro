@@ -59,4 +59,10 @@ mod tests {
         let git_root: Option<PathBuf> = git_root(".").unwrap();
         assert!(git_root.is_some());
     }
+
+    #[test]
+    fn test_project_git_config_dir_is_inside_git_repo() {
+        let git_root: Option<PathBuf> = git_root(".git/").unwrap();
+        assert!(git_root.is_some());
+    }
 }
